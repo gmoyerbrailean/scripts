@@ -27,6 +27,9 @@ def getTssLocs(fName='hg19.tss.loci.gz', delim='\t'):
 			tssDict[c].append(int(p)) # make non-redund?
 		else:
 			tssDict[c] = [int(p)]
+	# Sort the positions in case the file wasn't sorted
+	for k in tssDict.keys():
+		tssDict[k].sort()
 	return tssDict
 
 ## For each loci, use binary search to find closest TSS
@@ -58,8 +61,8 @@ oName = sys.argv[2]
 
 # Get TSS locations
 tssName='hg19.tss.loci.gz'
-if len(sys.argv > 3):
-	tssName = sys.argv][3]
+if len(sys.argv) > 3:
+	tssName = sys.argv[3]
 tDict = getTssLocs(tssName)
 
 ## Open input. Can be gzipped or not
@@ -91,7 +94,7 @@ for line in loci:
 	res += nLine + '\n'
 
 ## Output new file with annotations appeneded as new column
-if ( fName[-3:] == '.gz' ):
+if ( oName[-3:] == '.gz' ):
 	fd = gzip.open(oName, 'wb')
 else:	
 	fd = open(oName, 'w')
