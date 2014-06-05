@@ -73,9 +73,21 @@ else:
 loci = fd.read().split('\n')
 fd.close()
 
+delim = '\t' # Delimiter TODO: make accept custom delimiters
+res = ''	 # Empty string to hold the output
+
+## Check if the first line is a header (note: this is not bed-standard).
+## If so, grab it so as to add it to the output
+header=''
+lineOne = loci[0]
+lineOneSplit = lineOne.split(delim)
+if not (lineOneSplit[1].isdigit() and lineOneSplit[2].isdigit()):
+	header = lineOne + delim + 'tss.distance' + '\n'
+	loci = loci[1:]
+res += header
+
+
 ## Annotate with the nearest TSS
-delim = '\t'
-res = ''
 if '' in loci: loci.remove('')
 for line in loci:
 	l = line.split(delim)
